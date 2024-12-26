@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 Route::post('/tokens/create', function (Request $request) {
     $token = $request->user()->createToken($request->token_name);
  
-    return ['token' => $token->plainTextToken];
+    return ['access_token' => $token->plainTextToken];
 });
 
 Route::post('/login', function (Request $request) {
@@ -31,7 +31,11 @@ Route::post('/login', function (Request $request) {
         ]);
     }
  
-    return $user->createToken($request->device_name)->plainTextToken;
+    return response()->json([
+        'user' => $user,
+        'access_token' => $user->createToken($request->device_name)->plainTextToken,
+        'token_type' => 'Bearer',
+    ], 201);
 });
 
 Route::post('/register', function (Request $request) {
