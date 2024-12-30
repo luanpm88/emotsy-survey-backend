@@ -1,4 +1,6 @@
-@extends('layouts.main')
+@extends('layouts.main', [
+    'menu' => 'survey',
+])
 
 @section('title', 'Create Survey')
 

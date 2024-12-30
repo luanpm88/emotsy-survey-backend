@@ -1,4 +1,6 @@
-@extends('layouts.main')
+@extends('layouts.main', [
+    'menu' => 'user',
+])
 
 @section('title', 'User List')
 
