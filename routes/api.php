@@ -81,8 +81,13 @@ Route::get('/survey', function (Request $request) {
         return response()->json(['error' => 'No survey found with type: ' . $type['name']], 404);
     }
 
-    return response()->json($survey);
-});
+    $latestRating = $request->user()->ratings()->where('survey_id', $survey->id)->latest()->first();
+
+    return response()->json([
+        'survey' => $survey,
+        'latest_rating' => $latestRating ? $latestRating->result : null,
+    ]);
+})->middleware('auth:sanctum');
 
 Route::post('/survey/rate', function (Request $request) {
     $request->validate([
