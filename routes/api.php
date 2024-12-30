@@ -92,29 +92,27 @@ Route::get('/survey', function (Request $request) {
 Route::post('/survey/rate', function (Request $request) {
     $request->validate([
         'survey_id' => 'required|exists:surveys,id',
-        'type' => 'required|string',
-        'rating' => 'required',
+        'result' => 'required',
     ]);
 
     $survey = Survey::find($request->input('survey_id'));
-    $type = $request->input('type');
-    $rating = $request->input('rating');
+    $result = $request->input('result');
 
-    $validType = collect($survey->types)->firstWhere('name', $type);
+    $validType = collect($survey->types)->firstWhere('name', $survey->type);
 
     if (!$validType) {
-        return response()->json(['error' => 'Invalid type: ' . $type], 400);
+        return response()->json(['error' => 'Invalid type: ' . $survey->type], 400);
     }
 
-    if (!in_array($rating, $validType['possible_values'])) {
-        return response()->json(['error' => 'Invalid rating value'], 400);
+    if (!in_array($result, $validType['possible_values'])) {
+        return response()->json(['error' => 'Invalid result value'], 400);
     }
 
     $userRating = UserRating::create([
         'user_id' => $request->user()->id,
         'survey_id' => $survey->id,
-        'type' => $type,
-        'rating' => $rating,
+        'result' => $result,
+        'device' => $request->header('User-Agent'),
     ]);
 
     return response()->json(['message' => 'Rating submitted successfully', 'user_rating' => $userRating], 201);
