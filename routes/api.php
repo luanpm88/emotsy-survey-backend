@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use App\Models\Survey;
+use App\Models\UserRating;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -59,3 +61,69 @@ Route::post('/register', function (Request $request) {
         'token_type' => 'Bearer',
     ], 201);
 });
+
+Route::get('/survey', function (Request $request) {
+    $survey = new Survey();
+    $type = collect($survey->types)->firstWhere('name', $survey->default);
+
+    if ($request->has('type')) {
+        $requestedType = $request->input('type');
+        $type = collect($survey->types)->firstWhere('name', $requestedType);
+
+        if (!$type) {
+            return response()->json(['error' => 'Invalid type: ' . $request->has('type')], 400);
+        }
+    }
+
+    $survey = Survey::where('type', $type)->first();
+
+    if (!$survey) {
+        return response()->json(['error' => 'No survey found with type: ' . $type['name']], 404);
+    }
+
+    return response()->json($survey);
+});
+
+Route::post('/survey/rate', function (Request $request) {
+    $request->validate([
+        'survey_id' => 'required|exists:surveys,id',
+        'type' => 'required|string',
+        'result' => 'required',
+    ]);
+
+    $survey = Survey::find($request->input('survey_id'));
+    $type = $request->input('type');
+    $rating = $request->input('result');
+
+    $validType = collect($survey->types)->firstWhere('name', $type);
+
+    if (!$validType) {
+        return response()->json(['error' => 'Invalid type: ' . $type], 400);
+    }
+
+    if (!in_array($rating, $validType['possible_values'])) {
+        return response()->json(['error' => 'Invalid rating value'], 400);
+    }
+
+    $userRating = UserRating::create([
+        'user_id' => $request->user()->id,
+        'survey_id' => $survey->id,
+        'type' => $type,
+        'result' => $rating,
+        'device' => $request->header('User-Agent'),
+    ]);
+
+    return response()->json(['message' => 'Rating submitted successfully', 'user_rating' => $userRating], 201);
+})->middleware('auth:sanctum');
+
+// cURL example for /survey/rate endpoint
+/*
+curl -X POST http://your-domain.com/api/survey/rate \
+-H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+-H "Content-Type: application/json" \
+-d '{
+    "survey_id": 1,
+    "type": "range_1_5",
+    "rating": 4
+}'
+*/
