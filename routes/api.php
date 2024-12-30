@@ -85,7 +85,7 @@ Route::get('/survey', function (Request $request) {
 
     return response()->json([
         'survey' => $survey,
-        'latest_rating' => $latestRating ? $latestRating->result : null,
+        'result' => $latestRating ? $latestRating->result : null,
     ]);
 })->middleware('auth:sanctum');
 
