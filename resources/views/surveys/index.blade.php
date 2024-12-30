@@ -27,7 +27,10 @@
                             {{ $survey->question }}
                         </td>
                         <td>{{ $survey->type }}</td>
-                        <td>{{ $survey->ratings()->count() }} result(s)</td>
+                        <td>
+                            <a href="{{ route('surveys.show', $survey->id) }}">{{ $survey->ratings()->count() }} result(s)</a>
+
+                        </td>
                         <td>
                             <a href="{{ route('surveys.edit', $survey->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             <form action="{{ route('surveys.destroy', $survey->id) }}" method="POST" style="display:inline;">
