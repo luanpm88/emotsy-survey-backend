@@ -98,22 +98,11 @@ Route::post('/survey/rate', function (Request $request) {
     $survey = Survey::find($request->input('survey_id'));
     $result = $request->input('result');
 
-    $validType = collect($survey->types)->firstWhere('name', $survey->type);
-
-    if (!$validType) {
-        return response()->json(['error' => 'Invalid type: ' . $survey->type], 400);
+    try {
+        $userRating = UserRating::saveResult($request->user(), $survey, $result, $request->header('User-Agent'));
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 400);
     }
-
-    if (!in_array($result, $validType['possible_values'])) {
-        return response()->json(['error' => 'Invalid result value'], 400);
-    }
-
-    $userRating = UserRating::create([
-        'user_id' => $request->user()->id,
-        'survey_id' => $survey->id,
-        'result' => $result,
-        'device' => $request->header('User-Agent'),
-    ]);
 
     return response()->json(['message' => 'Rating submitted successfully', 'user_rating' => $userRating], 201);
 })->middleware('auth:sanctum');

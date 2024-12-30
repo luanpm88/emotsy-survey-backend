@@ -17,4 +17,14 @@ class Survey extends Model
             'possible_values' => ['happy', 'unhappy'],
         ],
     ];
+
+    public function ratings()
+    {
+        return $this->hasMany(UserRating::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_ratings');
+    }
 }
