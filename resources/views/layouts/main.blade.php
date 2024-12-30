@@ -16,13 +16,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Dashboard</a>
+                    <a class="nav-link" href="{{ route('users.index') }}">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link @yield('users_active')" href="{{ route('users.index') }}">Users</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Surveys</a>
+                    <a class="nav-link" href="{{ route('surveys.index') }}">Surveys</a>
                 </li>
             </ul>
         </div>

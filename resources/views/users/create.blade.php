@@ -2,8 +2,6 @@
 
 @section('title', 'Create User')
 
-@section('users_active', 'active')
-
 @section('content')
     <h1 class="mb-4">Create User</h1>
     <form action="{{ route('users.store') }}" method="POST">
@@ -21,5 +19,6 @@
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
         <button type="submit" class="btn btn-primary">Create</button>
+        <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

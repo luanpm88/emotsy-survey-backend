@@ -88,12 +88,12 @@ Route::post('/survey/rate', function (Request $request) {
     $request->validate([
         'survey_id' => 'required|exists:surveys,id',
         'type' => 'required|string',
-        'result' => 'required',
+        'rating' => 'required',
     ]);
 
     $survey = Survey::find($request->input('survey_id'));
     $type = $request->input('type');
-    $rating = $request->input('result');
+    $rating = $request->input('rating');
 
     $validType = collect($survey->types)->firstWhere('name', $type);
 
@@ -109,21 +109,8 @@ Route::post('/survey/rate', function (Request $request) {
         'user_id' => $request->user()->id,
         'survey_id' => $survey->id,
         'type' => $type,
-        'result' => $rating,
-        'device' => $request->header('User-Agent'),
+        'rating' => $rating,
     ]);
 
     return response()->json(['message' => 'Rating submitted successfully', 'user_rating' => $userRating], 201);
 })->middleware('auth:sanctum');
-
-// cURL example for /survey/rate endpoint
-/*
-curl -X POST http://your-domain.com/api/survey/rate \
--H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
--H "Content-Type: application/json" \
--d '{
-    "survey_id": 1,
-    "type": "range_1_5",
-    "rating": 4
-}'
-*/

@@ -2,8 +2,6 @@
 
 @section('title', 'Edit User')
 
-@section('users_active', 'active')
-
 @section('content')
     <h1 class="mb-4">Edit User</h1>
     <form action="{{ route('users.update', $user->id) }}" method="POST">
@@ -23,5 +21,6 @@
             <small class="form-text text-muted">Leave blank to keep current password.</small>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

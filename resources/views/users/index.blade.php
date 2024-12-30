@@ -2,8 +2,6 @@
 
 @section('title', 'User List')
 
-@section('users_active', 'active')
-
 @section('content')
     <h1 class="mb-4">Users</h1>
     <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Create User</a>
@@ -17,6 +15,7 @@
             <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Rating</th>
                 <th>Actions</th>
             </tr>
@@ -26,6 +25,7 @@
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->role }}</td>
                     <td>{{ optional($user->ratings->last())->result }}</td>
                     <td>
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
