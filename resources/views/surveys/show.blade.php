@@ -10,7 +10,7 @@
         
         <hr>
         <h5>Results</h5>
-        @if ($survey->users()->count())
+        @if ($survey->ratings()->count())
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -20,14 +20,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($survey->users as $user)
+                    @foreach ($survey->ratings as $rating)
                         <tr>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->ratings()
-                                ->bySurvey($survey)
-                                ->latest()
-                                ->first()->result }}
+                            <td>{{ $rating->user->name }}</td>
+                            <td>{{ $rating->user->email }}</td>
+                            <td>{{ $rating->result }}
                             </td>
                         </tr>
                     @endforeach

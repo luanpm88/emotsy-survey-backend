@@ -136,9 +136,11 @@ class AuthenticationTest extends TestCase
         
         Sanctum::actingAs($user);
 
-        $response = $this->postJson('/api/tokens/create', [
+        $response = $this->postJson('/api/user/create-token', [
             'token_name' => 'test_token'
         ]);
+
+        var_dump($response->json());
 
         $response->assertOk()
             ->assertJsonStructure(['access_token']);
@@ -146,7 +148,7 @@ class AuthenticationTest extends TestCase
 
     public function test_unauthenticated_user_cannot_create_token()
     {
-        $response = $this->postJson('/api/tokens/create', [
+        $response = $this->postJson('/api/user/create-token', [
             'token_name' => 'test_token'
         ]);
 
