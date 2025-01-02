@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Survey extends Model
 {
-    public $default = 'range_1_5';
+    public $default = 'happy_unhappy';
 
     public $types = [
         [
@@ -14,7 +14,7 @@ class Survey extends Model
             'possible_values' => ['1', '2', '3', '4', '5'],
         ], [
             'name' => 'happy_unhappy',
-            'possible_values' => ['happy', 'unhappy'],
+            'possible_values' => ['1', '2', '3', '4', '5'],
         ],
     ];
 
