@@ -35,18 +35,18 @@ class SurveyController extends Controller
     {
         $survey = Survey::findOrFail($id);
 
-        // chart data
-        $chartData = collect([]);
+        // stats
+        $stats = collect([]);
 
         // 
         foreach ($survey->getPossibleValues() as $value) {
-            $chartData->push([
+            $stats->push([
                 'name' => $value,
                 'value' => $survey->ratings()->where('result', $value)->count(),
             ]);
         }
 
-        return view('surveys.show', compact('survey', 'chartData'));
+        return view('surveys.show', compact('survey', 'stats'));
     }
 
     public function edit($id)

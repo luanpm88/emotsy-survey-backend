@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SurveyController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->action([SurveyController::class, 'index']);
 });
 
 Route::resource('backend/users', UserController::class);
