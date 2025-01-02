@@ -27,4 +27,11 @@ class Survey extends Model
     {
         return $this->belongsToMany(User::class, 'user_ratings');
     }
+
+    public function getPossibleValues()
+    {
+        $type = collect($this->types)->firstWhere('name', $this->type);
+
+        return $type['possible_values'];
+    }
 }
