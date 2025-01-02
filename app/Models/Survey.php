@@ -14,7 +14,7 @@ class Survey extends Model
             'possible_values' => ['1', '2', '3', '4', '5'],
         ], [
             'name' => 'happy_unhappy',
-            'possible_values' => ['1', '2', '3', '4', '5'],
+            'possible_values' => ['1', '2', '3', '4', '5'], // Từ buồn:1 đến vui:3 ... rất vui:5
         ],
     ];
 
