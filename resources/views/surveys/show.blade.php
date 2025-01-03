@@ -99,6 +99,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Result</th>
+                        <th>Device</th>
                         <th>Submission Date</th>
                     </tr>
                 </thead>
@@ -108,6 +109,7 @@
                             <td>{{ $rating->user->name }}</td>
                             <td>{{ $rating->user->email }}</td>
                             <td>{{ $rating->result }}</td>
+                            <td>{{ $rating->device }}</td>
                             <td>{{ $rating->updated_at }}</td>
                         </tr>
                     @endforeach
