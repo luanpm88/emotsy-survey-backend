@@ -9,6 +9,26 @@ use App\Models\UserRating;
 
 class SurveyController extends Controller
 {
+    public function list(Request $request)
+    {
+        // Fetch the survey with the specified type
+        $surveys = Survey::all();
+
+        $surveys = $surveys->map(function ($survey) use ($request) {
+            // Get the latest rating for the survey by the authenticated user
+            $latestRating = $request->user()->ratings()->where('survey_id', $survey->id)->latest()->first();
+
+            // Return the survey details and the latest rating
+            return [
+                'survey' => $survey,
+                'result' => $latestRating ? $latestRating->result : null,
+            ];
+        });
+
+        // Return the survey details and the latest rating
+        return response()->json($surveys);
+    }
+
     /**
      * Get the survey details and the latest rating for the authenticated user.
      */
