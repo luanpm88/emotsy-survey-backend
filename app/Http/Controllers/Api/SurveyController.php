@@ -48,6 +48,29 @@ class SurveyController extends Controller
     }
 
     /**
+     * Get the survey details and the latest rating for the authenticated user.
+     */
+    public function show(Request $request, $id)
+    {
+        // Fetch the survey with the specified type
+        $survey = Survey::find($id);
+
+        // Return error if no survey is found
+        if (!$survey) {
+            return response()->json(['error' => 'No survey found with id: ' . $id], 404);
+        }
+
+        // Get the latest rating for the survey by the authenticated user
+        $latestRating = $request->user()->ratings()->where('survey_id', $survey->id)->latest()->first();
+
+        // Return the survey details and the latest rating
+        return response()->json([
+            'survey' => $survey,
+            'result' => $latestRating ? $latestRating->result : null,
+        ]);
+    }
+
+    /**
      * Submit a rating for a survey by the authenticated user.
      */
     public function rate(Request $request)

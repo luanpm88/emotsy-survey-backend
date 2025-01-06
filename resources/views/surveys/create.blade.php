@@ -9,18 +9,8 @@
         <h1 class="mb-4">Create Survey</h1>
         <form action="{{ route('surveys.store') }}" method="POST">
             @csrf
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="question">Question:</label>
-                <input type="text" id="question" name="question" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="type">Type:</label>
-                <input type="text" id="type" name="type" class="form-control" required>
-            </div>
+            @include('surveys._form')
+            
             <button type="submit" class="btn btn-primary">Create</button>
             <a href="{{ route('surveys.index') }}" class="btn btn-secondary">Cancel</a>
         </form>

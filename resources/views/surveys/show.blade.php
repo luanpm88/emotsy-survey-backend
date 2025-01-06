@@ -11,8 +11,8 @@
 
     <div class="container mt-5">
         <h1 class="mb-4">{{ $survey->name }}</h1>
-        <p>{{ $survey->question }}</p>
-        <p>Type: {{ $survey->type }}</p>
+        <h4>{{ $survey->question }}</h4>
+        <p>Type: <strong class="badge bg-secondary">{{ $survey->type }}</strong></p>
         
         <hr>
 

@@ -15,7 +15,9 @@ class SurveyController extends Controller
 
     public function create()
     {
-        return view('surveys.create');
+        $survey = new Survey();
+
+        return view('surveys.create', compact('survey'));
     }
 
     public function store(Request $request)

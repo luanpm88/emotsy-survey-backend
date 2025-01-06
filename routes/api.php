@@ -13,6 +13,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/create-token', [App\Http\Controllers\Api\UserController::class, 'createToken']);
 
     // Get survey
+    Route::get('/survey/{id}', [App\Http\Controllers\Api\SurveyController::class, 'show']);
     Route::get('/survey', [App\Http\Controllers\Api\SurveyController::class, 'survey']);
     Route::post('/survey/rate', [App\Http\Controllers\Api\SurveyController::class, 'rate']);
 });

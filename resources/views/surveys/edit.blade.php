@@ -10,18 +10,8 @@
         <form action="{{ route('surveys.update', $survey->id) }}" method="POST">
             @csrf
             @method('PUT')
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ $survey->name }}" required>
-            </div>
-            <div class="form-group">
-                <label for="question">Question:</label>
-                <input type="text" id="question" name="question" class="form-control" value="{{ $survey->question }}" required>
-            </div>
-            <div class="form-group">
-                <label for="type">Type:</label>
-                <input type="text" id="type" name="type" class="form-control" value="{{ $survey->type }}" required>
-            </div>
+            @include('surveys._form')
+            
             <button type="submit" class="btn btn-primary">Update</button>
             <a href="{{ route('surveys.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
