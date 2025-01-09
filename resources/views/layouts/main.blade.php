@@ -25,6 +25,9 @@
                 <li class="nav-item">
                     <a class="nav-link {{ $menu == 'survey' ? 'active' : '' }}" href="{{ route('surveys.index') }}">Surveys</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $menu == 'device' ? 'active' : '' }}" href="{{ route('devices.index') }}">Devices</a>
+                </li>
             </ul>
         </div>
     </nav>

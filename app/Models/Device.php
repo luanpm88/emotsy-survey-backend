@@ -8,7 +8,6 @@ class Device extends Model
 {
     protected $fillable = [
         'name',
-        'question',
-        'type',
+        'description',
     ];
 }
