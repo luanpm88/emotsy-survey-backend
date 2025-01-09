@@ -11,7 +11,7 @@ class SurveyController extends Controller
 {
     public function list(Request $request)
     {
-        // Fetch the survey with the specified type
+        // Fetch all surveys
         $surveys = Survey::all();
 
         $surveys = $surveys->map(function ($survey) use ($request) {
