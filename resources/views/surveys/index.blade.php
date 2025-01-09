@@ -15,7 +15,7 @@
                     <th>Name/Question</th>
                     <th>Type</th>
                     <th>Result</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +31,7 @@
                             <a href="{{ route('surveys.show', $survey->id) }}">{{ $survey->ratings()->count() }} result(s)</a>
 
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             <a href="{{ route('surveys.edit', $survey->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             <form action="{{ route('surveys.destroy', $survey->id) }}" method="POST" style="display:inline;">
                                 @csrf

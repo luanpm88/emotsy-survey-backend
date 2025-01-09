@@ -12,7 +12,7 @@ class DeviceController extends Controller
     public function list(Request $request)
     {
         // Fetch all devices
-        $devices = Device::all();
+        $devices = $request->user()->devices;
 
         // Return the device details and the latest rating
         return response()->json($devices);

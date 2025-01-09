@@ -48,4 +48,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserRating::class);
     }
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
+
+    public function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
 }

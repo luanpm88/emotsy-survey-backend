@@ -17,6 +17,8 @@
             <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Survey</th>
+                <th>Device</th>
                 <th width="10%">Actions</th>
             </tr>
         </thead>
@@ -25,6 +27,16 @@
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td class="fw-semibold">
+                        <a href="{{ action([App\Http\Controllers\SurveyController::class, 'index']) }}">
+                            {{ $user->surveys()->count() }}
+                        </a>
+                    </td>
+                    <td class="fw-semibold">
+                        <a href="{{ action([App\Http\Controllers\SurveyController::class, 'index']) }}">
+                            {{ $user->devices()->count() }}
+                        </a>
+                    </td>
                     <td class="text-nowrap">
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline-block;">
