@@ -8,6 +8,12 @@ class Survey extends Model
 {
     public $default = 'range_1_5';
 
+    protected $fillable = [
+        'name',
+        'question',
+        'type',
+    ];
+
     public $types = [
         [
             'name' => 'range_1_5',

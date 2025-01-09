@@ -116,4 +116,70 @@ class SurveyController extends Controller
         // Return success response with the saved rating
         return response()->json(['message' => 'Rating submitted successfully', 'user_rating' => $userRating], 201);
     }
+
+    public function create(Request $request)
+    {
+        // Validate the incoming request
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'question' => 'required|string',
+            'type' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Create the survey
+        $survey = Survey::create([
+            'name' => $request->input('name'),
+            'question' => $request->input('question'),
+            'type' => $request->input('type'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Survey created successfully.',
+            'data' => $survey
+        ], 201);
+    }
+
+    public function update(Request $request, $survey_id)
+    {
+        // Validate the incoming request
+        $validator = \Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+            'question' => 'sometimes|required|string',
+            'type' => 'sometimes|required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Find the survey by ID
+        $survey = Survey::find($survey_id);
+
+        if (!$survey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Survey not found.'
+            ], 404);
+        }
+
+        // Update the survey with validated data
+        $survey->update($request->only(['name', 'question', 'type']));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Survey updated successfully.',
+            'data' => $survey
+        ], 200);
+    }
 }

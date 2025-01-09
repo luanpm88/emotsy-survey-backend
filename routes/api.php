@@ -17,4 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/survey/{id}', [App\Http\Controllers\Api\SurveyController::class, 'show']);
     Route::get('/survey', [App\Http\Controllers\Api\SurveyController::class, 'survey']);
     Route::post('/survey/rate', [App\Http\Controllers\Api\SurveyController::class, 'rate']);
+    Route::post('/survey/create', [App\Http\Controllers\Api\SurveyController::class, 'create']);
+    Route::post('/survey/{survey_id}/update', [App\Http\Controllers\Api\SurveyController::class, 'update']);
 });
