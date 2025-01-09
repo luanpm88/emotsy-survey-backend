@@ -24,8 +24,7 @@ class DeviceController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'question' => 'required|string',
-            'type' => 'required|string',
+            'description' => 'sometimes|string',
         ]);
 
         Device::create($validatedData);
@@ -37,18 +36,7 @@ class DeviceController extends Controller
     {
         $device = Device::findOrFail($id);
 
-        // stats
-        $stats = collect([]);
-
-        // 
-        foreach ($device->getPossibleValues() as $value) {
-            $stats->push([
-                'name' => $value,
-                'value' => $device->ratings()->where('result', $value)->count(),
-            ]);
-        }
-
-        return view('devices.show', compact('device', 'stats'));
+        return view('devices.show', compact('device'));
     }
 
     public function edit($id)
@@ -61,8 +49,7 @@ class DeviceController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'question' => 'sometimes|required|string',
-            'type' => 'sometimes|required|string',
+            'description' => 'sometimes|required|string',
         ]);
 
         $device = Device::findOrFail($id);

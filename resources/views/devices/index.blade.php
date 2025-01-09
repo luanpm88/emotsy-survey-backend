@@ -14,7 +14,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Actions</th>
+                    <th width="10%">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,7 +26,7 @@
                         <td>
                             {{ $device->description }}
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             <a href="{{ route('devices.edit', $device->id) }}" class="btn btn-primary btn-sm">Edit</a>
                             <form action="{{ route('devices.destroy', $device->id) }}" method="POST" style="display:inline;">
                                 @csrf

@@ -3,15 +3,6 @@
     <input type="text" id="name" name="name" class="form-control" value="{{ $device->name }}" required>
 </div>
 <div class="mb-3">
-    <label class="mb-2 fw-bold" for="question">Question:</label>
-    <input type="text" id="question" name="question" class="form-control" value="{{ $device->question }}" required>
-</div>
-<div class="mb-3">
-    <label class="mb-2 fw-bold" for="type">Type:</label>
-    {{-- <input type="text" id="type" name="type" class="form-control" required> --}}
-    <select name="type" id="" class="form-select">
-        @foreach ($device->types as $type)
-            <option value="{{ $type['name'] }}">{{ $type['name'] }}</option>
-        @endforeach
-    </select>
+    <label class="mb-2 fw-bold" for="description">Description:</label>
+    <input type="text" id="description" name="description" class="form-control" value="{{ $device->description }}" required>
 </div>
