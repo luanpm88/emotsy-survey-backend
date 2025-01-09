@@ -26,19 +26,8 @@ class DeviceController extends Controller
         // Fetch the device with the specified type
         $device = Device::find($id);
 
-        // Return error if no device is found
-        if (!$device) {
-            return response()->json(['error' => 'No device found with id: ' . $id], 404);
-        }
-
-        // Get the latest rating for the device by the authenticated user
-        $latestRating = $request->user()->ratings()->where('device_id', $device->id)->latest()->first();
-
         // Return the device details and the latest rating
-        return response()->json([
-            'device' => $device,
-            'result' => $latestRating ? $latestRating->result : null,
-        ]);
+        return response()->json($device);
     }
 
     public function create(Request $request)
@@ -57,10 +46,12 @@ class DeviceController extends Controller
         }
 
         // Create the device
-        $device = Device::create([
+        $device = new Device([
             'name' => $request->input('name'),
             'description' => $request->input('description'),
         ]);
+        $device->user_id = $request->user()->id;
+        $device->save();
 
         return response()->json([
             'success' => true,

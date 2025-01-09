@@ -27,7 +27,10 @@ class DeviceController extends Controller
             'description' => 'sometimes|string',
         ]);
 
-        Device::create($validatedData);
+        // create
+        $device = new Device($validatedData);
+        $device->user_id  = $request->user()->id;
+        $device->save();
 
         return redirect()->route('devices.index')->with('success', 'Device created successfully.');
     }

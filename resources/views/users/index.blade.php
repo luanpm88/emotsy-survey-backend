@@ -17,9 +17,7 @@
             <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Role</th>
-                <th>Rating</th>
-                <th>Actions</th>
+                <th width="10%">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +25,7 @@
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->role }}</td>
-                    <td>{{ optional($user->ratings->last())->result }}</td>
-                    <td>
+                    <td class="text-nowrap">
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline-block;">
                             @csrf

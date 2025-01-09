@@ -28,7 +28,10 @@ class SurveyController extends Controller
             'type' => 'required|string',
         ]);
 
-        Survey::create($validatedData);
+        // create
+        $survey = new Survey($validatedData);
+        $survey->user_id  = $request->user()->id;
+        $survey->save();
 
         return redirect()->route('surveys.index')->with('success', 'Survey created successfully.');
     }

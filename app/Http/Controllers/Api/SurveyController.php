@@ -134,11 +134,13 @@ class SurveyController extends Controller
         }
 
         // Create the survey
-        $survey = Survey::create([
+        $survey = new Survey([
             'name' => $request->input('name'),
             'question' => $request->input('question'),
             'type' => $request->input('type'),
         ]);
+        $survey->user_id = $request->user()->id;
+        $survey->save();
 
         return response()->json([
             'success' => true,
