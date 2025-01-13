@@ -98,16 +98,18 @@ class SurveyController extends Controller
         // Validate the request data
         $request->validate([
             'survey_id' => 'required|exists:surveys,id',
+            'device_id' => 'required|exists:devices,id',
             'result' => 'required',
         ]);
 
         // Fetch the survey and the result from the request
         $survey = Survey::find($request->input('survey_id'));
+        $device = Survey::find($request->input('device_id'));
         $result = $request->input('result');
 
         try {
             // Save the rating and return success response
-            $userRating = UserRating::saveResult($request->user(), $survey, $result, $request->header('User-Agent'));
+            $userRating = UserRating::saveResult($request->user(), $survey, $device, $result, $request->header('User-Agent'));
         } catch (\Exception $e) {
             // Return error response if saving the rating fails
             return response()->json(['error' => $e->getMessage()], 400);

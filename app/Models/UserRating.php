@@ -9,7 +9,7 @@ class UserRating extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'survey_id', 'result', 'device'];
+    protected $fillable = ['user_id', 'survey_id', 'device_id', 'result', 'device'];
 
     public function user()
     {
@@ -21,7 +21,7 @@ class UserRating extends Model
         return $this->belongsTo(Survey::class);
     }
 
-    public static function saveResult($user, $survey, $result, $device)
+    public static function saveResult($user, $survey, $device, $result, $fromDevice)
     {
         $validType = collect($survey->types)->firstWhere('name', $survey->type);
 
@@ -39,8 +39,9 @@ class UserRating extends Model
         return static::create([
             'user_id' => $user->id,
             'survey_id' => $survey->id,
+            'device_id' => $device->id,
             'result' => $result,
-            'device' => $device,
+            'device' => $fromDevice,
         ]);
     }
 
