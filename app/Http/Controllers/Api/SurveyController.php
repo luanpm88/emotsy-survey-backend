@@ -222,7 +222,12 @@ class SurveyController extends Controller
 
         // Clone the survey
         $clonedSurvey = $originalSurvey->replicate();
-        $clonedSurvey->name .= ' (Copy)'; // Optionally modify a field, like appending "Copy" to the title
+        if ($request->name) {
+            $clonedSurvey->name = $request->name;
+        } else {
+            $clonedSurvey->name .= ' (Copy)'; // Optionally modify a field, like appending "Copy" to the title
+        }
+            
         $clonedSurvey->save();
 
         return response()->json([
