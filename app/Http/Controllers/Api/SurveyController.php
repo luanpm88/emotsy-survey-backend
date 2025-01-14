@@ -207,4 +207,28 @@ class SurveyController extends Controller
             'message' => 'Survey deleted successfully.',
         ], 200);
     }
+
+    public function copy(Request $request, $survey_id)
+    {
+        // Find the survey by ID and ensure it belongs to the authenticated user
+        $originalSurvey = Survey::where('user_id', $request->user()->id)->find($survey_id);
+
+        if (!$originalSurvey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Survey not found or you are not authorized to clone it.',
+            ], 404);
+        }
+
+        // Clone the survey
+        $clonedSurvey = $originalSurvey->replicate();
+        $clonedSurvey->name .= ' (Copy)'; // Optionally modify a field, like appending "Copy" to the title
+        $clonedSurvey->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Survey cloned successfully.',
+            'data' => $clonedSurvey
+        ], 201);
+    }
 }
