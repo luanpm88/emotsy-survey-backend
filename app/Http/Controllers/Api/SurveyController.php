@@ -186,4 +186,25 @@ class SurveyController extends Controller
             'data' => $survey
         ], 200);
     }
+
+    public function destroy(Request $request, $survey_id)
+{
+        // Find the survey by ID and ensure it belongs to the authenticated user
+        $survey = Survey::where('user_id', $request->user()->id)->find($survey_id);
+
+        if (!$survey) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Survey not found or you are not authorized to delete it.',
+            ], 404);
+        }
+
+        // Delete the survey
+        $survey->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Survey deleted successfully.',
+        ], 200);
+    }
 }
