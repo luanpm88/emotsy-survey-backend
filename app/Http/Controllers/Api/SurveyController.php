@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Survey;
+use App\Models\Device;
 use App\Models\UserRating;
 
 class SurveyController extends Controller
@@ -104,16 +105,16 @@ class SurveyController extends Controller
 
         // Fetch the survey and the result from the request
         $survey = Survey::find($request->input('survey_id'));
-        $device = Survey::find($request->input('device_id'));
+        $device = Device::find($request->input('device_id'));
         $result = $request->input('result');
 
-        try {
+        // try {
             // Save the rating and return success response
             $userRating = UserRating::saveResult($request->user(), $survey, $device, $result, $request->header('User-Agent'));
-        } catch (\Exception $e) {
-            // Return error response if saving the rating fails
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
+        // } catch (\Exception $e) {
+        //     // Return error response if saving the rating fails
+        //     return response()->json(['error' => $e->getMessage()], 400);
+        // }
 
         // Return success response with the saved rating
         return response()->json(['message' => 'Rating submitted successfully', 'user_rating' => $userRating], 201);
@@ -188,7 +189,7 @@ class SurveyController extends Controller
     }
 
     public function destroy(Request $request, $survey_id)
-{
+    {
         // Find the survey by ID and ensure it belongs to the authenticated user
         $survey = Survey::where('user_id', $request->user()->id)->find($survey_id);
 
@@ -235,5 +236,46 @@ class SurveyController extends Controller
             'message' => 'Survey cloned successfully.',
             'data' => $clonedSurvey
         ], 201);
+    }
+
+    public function report($id)
+    {
+        // Fetch the survey
+        $survey = Survey::findOrFail($id);
+
+        // Get all ratings for the survey
+        $ratings = UserRating::where('survey_id', $id)->get();
+
+        // Total rating count
+        $totalRatingCount = $ratings->count();
+
+        // Average result
+        $averageResult = $totalRatingCount > 0 ? $ratings->avg('result') : 0;
+
+        // Device-wise ratings summary
+        $deviceRatings = $ratings->groupBy('device_id')->map(function ($deviceRatings) {
+            return [
+                'total_rate' => $deviceRatings->count(),
+                'average' => $deviceRatings->avg('result'),
+            ];
+        })->toArray();
+
+        // Distribution of ratings (1-5)
+        $ratingDistribution = array_fill(1, 5, 0);
+        foreach ($ratings as $rating) {
+            $ratingDistribution[$rating->result]++;
+        }
+
+        // Response
+        return response()->json([
+            'survey' => [
+                'id' => $survey->id,
+                'name' => $survey->name,
+            ],
+            'total_rating_count' => $totalRatingCount,
+            'average_result' => $averageResult,
+            'device_ratings' => $deviceRatings,
+            'rating_distribution' => $ratingDistribution,
+        ]);
     }
 }
