@@ -258,14 +258,17 @@ class SurveyController extends Controller
         $averageResult = $totalRatingCount > 0 ? $ratings->avg('result') : 0;
 
         // Device-wise ratings summary
-        $deviceRatings = $ratings->groupBy('device_id')->map(function ($deviceRatings) {
+        $deviceRatings = $ratings->groupBy('device_id')->map(function ($deviceRatings, $deviceId) {
+            // Get the device details using the device ID
+            $device = \App\Models\Device::find($deviceId);
+        
             return [
-                'device_id' => $deviceRatings->device->id,
-                'device_name' => $deviceRatings->device->name,
+                'device_id' => $deviceId,
+                'device_name' => $device ? $device->name : 'Unknown Device',
                 'total_rate' => $deviceRatings->count(),
                 'average' => $deviceRatings->avg('result'),
             ];
-        })->toArray();
+        })->values()->toArray();
 
         // Distribution of ratings (1-5)
         $ratingDistribution = array_fill(1, 5, 0);
