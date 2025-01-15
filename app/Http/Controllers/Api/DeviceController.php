@@ -35,7 +35,7 @@ class DeviceController extends Controller
         // Validate the incoming request
         $validator = \Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'description' => 'sometimes|string',
+            'description' => 'sometimes',
         ]);
 
         if ($validator->fails()) {
