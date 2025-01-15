@@ -15,14 +15,19 @@ class SurveyController extends Controller
         // Fetch all surveys
         $surveys = $request->user()->surveys;
 
+        // Map survey details along with rating count, average result, and latest user rating
         $surveys = $surveys->map(function ($survey) use ($request) {
             // Get the latest rating for the survey by the authenticated user
             $latestRating = $request->user()->ratings()->where('survey_id', $survey->id)->latest()->first();
 
-            // Return the survey details and the latest rating
             return [
-                'survey' => $survey,
-                'result' => $latestRating ? $latestRating->result : null,
+                'id' => $survey->id,
+                'name' => $survey->name,
+                'question' => $survey->question,
+                'type' => $survey->type,
+                'rating_count' => $survey->ratingCount(),
+                'average_result' => $survey->averageResult(),
+                'user_latest_rating' => $latestRating ? $latestRating->result : null,
             ];
         });
 
@@ -255,6 +260,8 @@ class SurveyController extends Controller
         // Device-wise ratings summary
         $deviceRatings = $ratings->groupBy('device_id')->map(function ($deviceRatings) {
             return [
+                'device_id' => $deviceRatings->device->id,
+                'device_name' => $deviceRatings->device->name,
                 'total_rate' => $deviceRatings->count(),
                 'average' => $deviceRatings->avg('result'),
             ];

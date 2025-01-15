@@ -21,6 +21,11 @@ class UserRating extends Model
         return $this->belongsTo(Survey::class);
     }
 
+    public function device()
+    {
+        return $this->belongsTo(Device::class);
+    }
+
     public static function saveResult($user, $survey, $device, $result, $fromDevice)
     {
         $validType = collect($survey->types)->firstWhere('name', $survey->type);

@@ -40,4 +40,16 @@ class Survey extends Model
 
         return $type['possible_values'];
     }
+
+    // Count of ratings for this survey
+    public function ratingCount()
+    {
+        return $this->ratings()->count();
+    }
+
+    // Average result of ratings for this survey
+    public function averageResult()
+    {
+        return $this->ratings()->avg('result') ?? 0;
+    }
 }
