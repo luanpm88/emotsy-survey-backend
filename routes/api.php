@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/survey/{survey_id}/update', [App\Http\Controllers\Api\SurveyController::class, 'update']);
 
     // Device
+    Route::post('/device/{id}/delete', [App\Http\Controllers\Api\DeviceController::class, 'destroy']);
     Route::get('/device/list', [App\Http\Controllers\Api\DeviceController::class, 'list']);
     Route::get('/device/{id}', [App\Http\Controllers\Api\DeviceController::class, 'show']);
     Route::get('/device', [App\Http\Controllers\Api\DeviceController::class, 'survey']);
