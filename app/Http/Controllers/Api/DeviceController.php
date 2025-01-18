@@ -12,7 +12,7 @@ class DeviceController extends Controller
     public function list(Request $request)
     {
         // Fetch all devices
-        $devices = $request->user()->devices;
+        $devices = $request->user()->devices()->latest()->get();
 
         // Return the device details and the latest rating
         return response()->json($devices);
@@ -65,7 +65,7 @@ class DeviceController extends Controller
         // Validate the incoming request
         $validator = \Validator::make($request->all(), [
             'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
+            'description' => 'sometimes',
         ]);
 
         if ($validator->fails()) {

@@ -13,7 +13,7 @@ class SurveyController extends Controller
     public function list(Request $request)
     {
         // Fetch all surveys
-        $surveys = $request->user()->surveys;
+        $surveys = $request->user()->surveys()->latest()->get();
 
         // Map survey details along with rating count, average result, and latest user rating
         $surveys = $surveys->map(function ($survey) use ($request) {
