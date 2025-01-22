@@ -243,13 +243,31 @@ class SurveyController extends Controller
         ], 201);
     }
 
-    public function report($id)
+    public function reportById($id, $from, $to, $deviceIds=[])
     {
         // Fetch the survey
         $survey = Survey::findOrFail($id);
 
         // Get all ratings for the survey
-        $ratings = UserRating::where('survey_id', $id)->get();
+        $query = UserRating::where('survey_id', $id);
+
+        if ($from) {
+            $query->where('created_at', '>=', $from);
+        }
+    
+        if ($to) {
+            $query->where('created_at', '<=', $to);
+        }
+    
+        if (!empty($deviceIds)) {
+            $query->whereIn('device_id', $deviceIds);
+        }
+    
+        if (!empty($surveyIds)) {
+            $query->whereIn('survey_id', $surveyIds);
+        }
+
+        $ratings = $query->get();
 
         // Total rating count
         $totalRatingCount = $ratings->count();
@@ -271,21 +289,68 @@ class SurveyController extends Controller
         })->values()->toArray();
 
         // Distribution of ratings (1-5)
-        $ratingDistribution = array_fill(1, 5, 0);
+        $ratingDistribution = array_fill(1, 5, ['percent' => 0, 'count' => 0]);
         foreach ($ratings as $rating) {
-            $ratingDistribution[$rating->result]++;
+            $ratingDistribution[$rating->result]['count']++;
+        }
+        foreach ($ratingDistribution as $result => &$distribution) {
+            $distribution['percent'] = $totalRatingCount > 0 ? ($distribution['count'] / $totalRatingCount) * 100 : 0;
+            $distribution['result'] = $result;
         }
 
+        // Recent ratings
+        $recentRatings = $ratings->sortByDesc('created_at')->take(4)->map(function ($rating) {
+            return [
+                'datetime' => $rating->created_at->format('Y-m-d H:i'),
+                'result' => $rating->result,
+            ];
+        })->toArray();
+
         // Response
-        return response()->json([
-            'survey' => [
-                'id' => $survey->id,
-                'name' => $survey->name,
-            ],
+        return [
+            'survey_id' => $survey->id,
+            'survey_name' => $survey->name,
             'total_rating_count' => $totalRatingCount,
             'average_result' => $averageResult,
             'device_ratings' => $deviceRatings,
-            'rating_distribution' => $ratingDistribution,
-        ]);
+            'rating_distribution' => array_values($ratingDistribution),
+            'recent' => $recentRatings,
+        ];
+    }
+
+    public function report(Request $request, $id)
+    {
+        // Extract filter parameters from the request
+        $from = $request->input('from');
+        $to = $request->input('to');
+
+        return $this->reportById($id, $from, $to);
+    }
+
+    public function reportAll(Request $request)
+    {
+        // Extract filter parameters from the request
+        $from = $request->input('from');
+        $to = $request->input('to');
+        $deviceIds = $request->input('device_ids', []);
+        
+
+        // Fetch all surveys
+        $surveys = $request->user()->surveys()->latest();
+
+        if ($request->survey_ids) {
+            $surveyIds = $request->input('survey_ids', []);
+            $surveys = $surveys->whereIn('id', $surveyIds);
+        }
+
+        $surveys = $surveys->get();
+
+        // Map survey details along with rating count, average result, and latest user rating
+        $surveys = $surveys->map(function ($survey) use ($from, $to, $deviceIds) {
+            return $this->reportById($survey->id, $from, $to, $deviceIds);
+        });
+
+        // Return the survey details and the latest rating
+        return response()->json($surveys);
     }
 }
