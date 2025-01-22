@@ -323,8 +323,9 @@ class SurveyController extends Controller
         // Extract filter parameters from the request
         $from = $request->input('from');
         $to = $request->input('to');
+        $deviceIds = $request->input('device_ids', []);
 
-        return $this->reportById($id, $from, $to);
+        return $this->reportById($id, $from, $to, $deviceIds);
     }
 
     public function reportAll(Request $request)
