@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Survey;
 use App\Models\Device;
 use App\Models\UserRating;
+use Carbon\Carbon;
 
 class SurveyController extends Controller
 {
@@ -306,6 +307,19 @@ class SurveyController extends Controller
             ];
         })->toArray();
 
+        // Ratings for the last 5 months
+        $chartData = [];
+        for ($i = 4; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i)->format('M-Y');
+            $count = $ratings->filter(function ($rating) use ($i) {
+                return $rating->created_at->between(
+                    Carbon::now()->subMonths($i)->startOfMonth(),
+                    Carbon::now()->subMonths($i)->endOfMonth()
+                );
+            })->count();
+            $chartData[] = ['data' => $month, 'count' => $count];
+        }
+
         // Response
         return [
             'survey_id' => $survey->id,
@@ -315,6 +329,7 @@ class SurveyController extends Controller
             'device_ratings' => $deviceRatings,
             'rating_distribution' => array_values($ratingDistribution),
             'recent' => $recentRatings,
+            'chart_data' => $chartData,
         ];
     }
 
