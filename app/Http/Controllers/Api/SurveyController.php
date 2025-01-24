@@ -305,7 +305,7 @@ class SurveyController extends Controller
                 'datetime' => $rating->created_at->format('Y-m-d H:i'),
                 'result' => $rating->result,
             ];
-        })->toArray();
+        })->values()->toArray();
 
         // Ratings for the last 5 months
         $chartData = [];
