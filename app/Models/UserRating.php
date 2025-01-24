@@ -38,8 +38,8 @@ class UserRating extends Model
             throw new \Exception('Invalid result value. Value: ' . $result . '. Except values: ' . json_encode($validType['possible_values']));
         }
 
-        static::where('user_id', $user->id)
-            ->where('survey_id', $survey->id)->delete();
+        // static::where('user_id', $user->id)
+        //     ->where('survey_id', $survey->id)->delete();
 
         return static::create([
             'user_id' => $user->id,
