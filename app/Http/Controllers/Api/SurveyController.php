@@ -308,7 +308,7 @@ class SurveyController extends Controller
         })->values()->toArray();
 
         // Ratings for the last 5 months
-        $chartData = [];
+        $ratingChartData = [];
         for ($i = 4; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i)->format('M-Y');
             $count = $ratings->filter(function ($rating) use ($i) {
@@ -317,7 +317,16 @@ class SurveyController extends Controller
                     Carbon::now()->subMonths($i)->endOfMonth()
                 );
             })->count();
-            $chartData[] = ['data' => $month, 'count' => $count];
+            $ratingChartData[] = ['label' => $month, 'value' => $count];
+        }
+
+        // Device rating for the last 5 months
+        $deviceChartData = [];
+        foreach (Device::all() as $device) {
+            $count = $ratings->filter(function ($rating) use ($device) {
+                return $rating->where('device_id', '=', $device->id);
+            })->count();
+            $deviceChartData[] = ['label' => $device->name, 'value' => $count];
         }
 
         // Response
@@ -329,7 +338,25 @@ class SurveyController extends Controller
             'device_ratings' => $deviceRatings,
             'rating_distribution' => array_values($ratingDistribution),
             'recent' => $recentRatings,
-            'chart_data' => $chartData,
+            'charts' => [
+                [
+                    'name' => 'Report for the last 5 months',
+                    'type' => 'bar',
+                    'data' => $ratingChartData,
+                ],
+
+                [
+                    'name' => 'Report for the last 5 months',
+                    'type' => 'line',
+                    'data' => $ratingChartData,
+                ],
+
+                [
+                    'name' => 'Devices rating report',
+                    'type' => 'pie',
+                    'data' => $deviceChartData,
+                ],
+            ]
         ];
     }
 
