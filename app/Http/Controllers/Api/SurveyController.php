@@ -320,6 +320,20 @@ class SurveyController extends Controller
             $ratingChartData[] = ['label' => $month, 'value' => $count];
         }
 
+        // Ratings for the last 5 months
+        $averageRatingChartData = [];
+        for ($i = 4; $i >= 0; $i--) {
+            $month = Carbon::now()->subMonths($i)->format('M-Y');
+            $monthlyRatings = $ratings->filter(function ($rating) use ($i) {
+                return $rating->created_at->between(
+                    Carbon::now()->subMonths($i)->startOfMonth(),
+                    Carbon::now()->subMonths($i)->endOfMonth()
+                );
+            });
+            $average = $monthlyRatings->avg('result') ?? 0;
+            $averageRatingChartData[] = ['label' => $month, 'value' => $average];
+        }
+
         // Device rating for the last 5 months
         $deviceChartData = [];
         foreach (Device::all() as $device) {
@@ -346,9 +360,9 @@ class SurveyController extends Controller
                 ],
 
                 [
-                    'name' => 'Report for the last 5 months',
+                    'name' => 'Everage results for the last 5 months',
                     'type' => 'line',
-                    'data' => $ratingChartData,
+                    'data' => $averageRatingChartData,
                 ],
 
                 [
