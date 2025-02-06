@@ -27,7 +27,7 @@ class SurveyController extends Controller
                 'question' => $survey->question,
                 'type' => $survey->type,
                 'rating_count' => $survey->ratingCount(),
-                'average_result' => $survey->averageResult(),
+                'average_result' => round($survey->averageResult(), 2),
                 'user_latest_rating' => $latestRating ? $latestRating->result : null,
             ];
         });
@@ -348,7 +348,7 @@ class SurveyController extends Controller
             'survey_id' => $survey->id,
             'survey_name' => $survey->name,
             'total_rating_count' => $totalRatingCount,
-            'average_result' => $averageResult,
+            'average_result' => round($averageResult, 2),
             'device_ratings' => $deviceRatings,
             'rating_distribution' => array_values($ratingDistribution),
             'recent' => $recentRatings,
