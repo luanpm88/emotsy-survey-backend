@@ -253,11 +253,11 @@ class SurveyController extends Controller
         $query = UserRating::where('survey_id', $id);
 
         if ($from) {
-            $query->where('created_at', '>=', $from);
+            $query->where('created_at', '>=', \Carbon\Carbon::parse($from));
         }
     
         if ($to) {
-            $query->where('created_at', '<=', $to);
+            $query->where('created_at', '<=', \Carbon\Carbon::parse($to)->endOfDay());
         }
     
         if (!empty($deviceIds)) {
