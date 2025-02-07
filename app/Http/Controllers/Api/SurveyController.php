@@ -336,7 +336,7 @@ class SurveyController extends Controller
 
         // Device rating for the last 5 months
         $deviceChartData = [];
-        foreach (Device::all() as $device) {
+        foreach ($survey->user->devices as $device) {
             $count = $ratings->filter(function ($rating) use ($device) {
                 return $rating->where('device_id', '=', $device->id);
             })->count();
